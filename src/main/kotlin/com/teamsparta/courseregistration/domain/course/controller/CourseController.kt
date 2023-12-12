@@ -15,24 +15,27 @@ import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/courses")
 @RestController
-class CourseController {
+class CourseController(private val courseService: CourseService) {
 
-    //강의 생성
-    @PostMapping
-    fun createCourse(@RequestBody createCourseRequest: CreateCourseRequest): ResponseEntity<CourseResponse> {
-        TODO("not implemented")
-    }
-
-    //강의 목록 조회
     @GetMapping()
     fun getCourseList(): ResponseEntity<List<CourseResponse>> {
-        TODO("not implemented")
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(courseService.getAllCourseList())
     }
 
-    //강의 단건 조회
     @GetMapping("/{courseId}")
     fun getCourse(@PathVariable courseId: Long): ResponseEntity<CourseResponse> {
-        TODO("not implemented")
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(courseService.getCourseById(courseId))
+    }
+
+    @PostMapping
+    fun createCourse(@RequestBody createCourseRequest: CreateCourseRequest): ResponseEntity<CourseResponse> {
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(courseService.createCourse(createCourseRequest))
     }
 
     @PutMapping("/{courseId}")
@@ -40,12 +43,17 @@ class CourseController {
         @PathVariable courseId: Long,
         @RequestBody updateCourseRequest: UpdateCourseRequest
     ): ResponseEntity<CourseResponse> {
-        TODO("not implemented")
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(courseService.updateCourse(courseId, updateCourseRequest))
     }
 
     @DeleteMapping("/{courseId}")
     fun deleteCourse(@PathVariable courseId: Long): ResponseEntity<Unit> {
-        TODO("not implemented")
+        courseService.deleteCourse(courseId)
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .build()
     }
 
 }
