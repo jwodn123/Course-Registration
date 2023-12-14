@@ -1,6 +1,7 @@
 package com.teamsparta.courseregistration.domain.lecture.model
 
 import com.teamsparta.courseregistration.domain.course.model.Course
+import com.teamsparta.courseregistration.domain.lecture.dto.LectureResponse
 import jakarta.persistence.*
 
 @Entity
@@ -12,8 +13,8 @@ class Lecture(
     @Column(name = "video_url", nullable = false)
     var videoUrl: String,
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
     var course: Course
 ) {
 
@@ -21,4 +22,12 @@ class Lecture(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
+}
+
+fun Lecture.toResponse(): LectureResponse {
+    return LectureResponse(
+        id = id!!,
+        title = title,
+        videoUrl = videoUrl,
+    )
 }
